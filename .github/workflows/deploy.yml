@@ -1,4 +1,5 @@
-name: Deploy on push to main
+# .github/workflows/deploy.yml
+name: Deploy to GCP
 
 on:
   push:
@@ -6,22 +7,22 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up SSH
+      - name: Setup SSH
         uses: webfactory/ssh-agent@v0.5.4
         with:
           ssh-private-key: ${{ secrets.GCP_SSH_KEY }}
 
-      - name: Deploy via SSH
+      - name: Deploy to GCP
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} << 'EOF'
-            cd ~/my-next-app
+            cd /home/vboxuser/my-next-app
             git pull origin main
-            pm2 restart nextjs-test
+            pm2 restart all
           EOF
