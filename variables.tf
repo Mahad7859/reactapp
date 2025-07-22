@@ -13,3 +13,7 @@ variable "project_id" {
   description = "Google Cloud Project ID"
   type        = string
 }
+variable "google_credentials" {
+  type        = string
+  description = "Path to Google Cloud credentials JSON"
+}
