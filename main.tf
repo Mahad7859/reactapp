@@ -1,38 +1,33 @@
 terraform {
   backend "remote" {
-    organization = "ASLII"  # Replace with your Terraform Cloud org
+    organization = "ASLII"  # <-- Replace with your actual Terraform Cloud org
 
     workspaces {
       name = "reactapp"
     }
   }
-}
-terraform {
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "~> 5.0"
-    }
-  }
-
-  cloud {
-    organization = "ASLII"              # ✅ Your Terraform Cloud Org
-    workspaces {
-      name = "reactapp"                 # ✅ Your Workspace Name
+      version = ">= 4.0"
     }
   }
 }
 
 provider "google" {
-  project = var.project_id
-  region  = var.region
+  credentials = jsondecode(var.google_credentials)
+  project     = "your-gcp-project-id"     # Replace this
+  region      = "us-central1"             # Replace as needed
 }
 
-resource "google_storage_bucket" "static_bucket" {
-  name     = "${var.project_id}-static-site-bucket"
-  location = var.region
-  force_destroy = true
-
-  uniform_bucket_level_access = true
+variable "google_credentials" {
+  description = "GCP credentials"
+  type        = string
+  sensitive   = true
 }
 
+provider "google" {
+  credentials = jsondecode(var.google_credentials)
+  project     = var.project_id
+  region      = "us-central1" # or your region
+}
