@@ -15,6 +15,6 @@ terraform {
 }
 provider "google" {
   credentials = var.google_credentials
-  project     = var.project_id
+  project     = devops-test-465307 
   region      = var.region
 }
